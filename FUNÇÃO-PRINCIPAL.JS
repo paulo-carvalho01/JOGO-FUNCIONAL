@@ -1,5 +1,5 @@
 const iniciarJogo = (palavra, tentativas = 6) =>({
-    palavra: "BANANA",
+    palavra: palavra.toUpperCase(),
     letrascertas:[],
     letraserradas:[],
     tentativasrestantes: tentativas,
@@ -24,6 +24,29 @@ const verificarDerrota = (jogo) => {
   }
 }
 
+const adicionarLetraCerta = (jogo, letra) => {
+  if (!contemLetra(jogo.palavra, letra)) return;
+  if (contemLetra(jogo.letrascertas, letra)) return;
 
+  jogo.letrascertas.push(letra);
+  verificarVitoria(jogo);
+}
 
+const adicionarLetraErrada = (jogo, letra) => {
+  if (contemLetra(jogo.palavra, letra)) return;
+  if (contemLetra(jogo.letraserradas, letra)) return;
 
+  jogo.letraserradas.push(letra);
+  jogo.tentativasrestantes--;
+  verificarDerrota(jogo);
+}
+
+const adicionarLetra = (jogo, letra) => {
+  if (jogo.status !== 'jogando') return;
+
+  if (contemLetra(jogo.palavra, letra)) {
+    adicionarLetraCerta(jogo, letra);
+  } else {
+    adicionarLetraErrada(jogo, letra);
+  }
+}
